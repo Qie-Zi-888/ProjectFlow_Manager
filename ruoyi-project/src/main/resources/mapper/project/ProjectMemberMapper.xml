@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.ProjectMemberMapper">
+    
+    <resultMap type="ProjectMember" id="ProjectMemberResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="email"    column="email"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="projectRole"    column="project_role"    />
+        <result property="joinTime"    column="join_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="Investment"    column="Investment"    />
+    </resultMap>
+
+    <sql id="selectProjectMemberVo">
+        select pm.id, pm.project_id, pm.user_id, pm.project_role, pm.join_time, pm.create_by, pm.create_time, pm.update_by, pm.update_time, pm.Investment,
+               su.user_name, su.nick_name, su.email, su.phonenumber,
+               p.project_name
+        from project_member pm
+        left join sys_user su on pm.user_id = su.user_id
+        left join project p on pm.project_id = p.project_id
+    </sql>
+
+    <select id="selectProjectMemberList" parameterType="ProjectMember" resultMap="ProjectMemberResult">
+        <include refid="selectProjectMemberVo"/>
+        <where>  
+            <if test="projectId != null "> and pm.project_id = #{projectId}</if>
+            <if test="nickName != null  and nickName != ''"> and su.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="projectRole != null  and projectRole != ''"> and pm.project_role = #{projectRole}</if>
+            <if test="joinTime != null "> and pm.join_time = #{joinTime}</if>
+            <if test="createBy != null  and createBy != ''"> and pm.create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectMemberById" parameterType="Long" resultMap="ProjectMemberResult">
+        <include refid="selectProjectMemberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProjectMember" parameterType="ProjectMember" useGeneratedKeys="true" keyProperty="id">
+        insert into project_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">project_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="projectRole != null">project_role,</if>
+            <if test="joinTime != null">join_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="Investment != null">Investment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="projectRole != null">#{projectRole},</if>
+            <if test="joinTime != null">#{joinTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="Investment != null">#{Investment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectMember" parameterType="ProjectMember">
+        update project_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="projectRole != null">project_role = #{projectRole},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="Investment != null">Investment = #{Investment},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjectMemberById" parameterType="Long">
+        delete from project_member where id = #{id}
+    </delete>
+
+    <delete id="deleteProjectMemberByIds" parameterType="String">
+        delete from project_member where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

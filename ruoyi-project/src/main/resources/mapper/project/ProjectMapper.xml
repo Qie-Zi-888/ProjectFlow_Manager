@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.ProjectMapper">
+    
+    <resultMap type="Project" id="ProjectResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectCode"    column="project_code"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="priority"    column="priority"    />
+        <result property="Budget"    column="Budget"    />
+        <result property="requirementCount"    column="requirement_count"    />
+        <result property="Investment"    column="Investment"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="realStartDate"    column="real_start_date"    />
+        <result property="realEndDate"    column="real_end_date"    />
+        <result property="progress"    column="progress"    />
+        <result property="ownerId"    column="owner_id"    />
+        <result property="ownerName"    column="owner_name"    />
+        <result property="boardStyle"    column="board_style"    />
+        <result property="colWidth"    column="col_width"    />
+        <result property="displayCards"    column="display_cards"    />
+        <result property="fluidBoard"    column="fluid_board"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap id="ProjectProjectModuleResult" type="Project" extends="ProjectResult">
+        <collection property="projectModuleList" ofType="ProjectModule" column="project_id" select="selectProjectModuleList" />
+    </resultMap>
+
+    <resultMap type="ProjectModule" id="ProjectModuleResult">
+        <result property="moduleId"    column="module_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="moduleName"    column="module_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectProjectVo">
+        select project_id, project_name, project_code, description, status, priority, Budget, requirement_count, Investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag from project
+    </sql>
+
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="projectCode != null  and projectCode != ''"> and project_code = #{projectCode}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="priority != null "> and priority = #{priority}</if>
+            <if test="Budget != null "> and Budget = #{Budget}</if>
+            <if test="requirementCount != null "> and requirement_count = #{requirementCount}</if>
+            <if test="Investment != null "> and Investment = #{Investment}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="realStartDate != null "> and real_start_date = #{realStartDate}</if>
+            <if test="realEndDate != null "> and real_end_date = #{realEndDate}</if>
+            <if test="progress != null "> and progress = #{progress}</if>
+            <if test="ownerName != null  and ownerName != ''"> and owner_name like concat('%', #{ownerName}, '%')</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectByProjectId" parameterType="Long" resultMap="ProjectProjectModuleResult">
+        select project_id, project_name, project_code, description, status, priority, Budget, requirement_count, Investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag
+        from project
+        where project_id = #{projectId}
+    </select>
+
+    <select id="selectProjectModuleList" resultMap="ProjectModuleResult">
+        select module_id, project_id, module_name, parent_id, order_num, create_by, create_time, update_by, update_time, del_flag
+        from project_module
+        where project_id = #{project_id}
+    </select>
+
+    <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="projectId">
+        insert into project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="projectCode != null">project_code,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="priority != null">priority,</if>
+            <if test="Budget != null">Budget,</if>
+            <if test="requirementCount != null">requirement_count,</if>
+            <if test="Investment != null">Investment,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="realStartDate != null">real_start_date,</if>
+            <if test="realEndDate != null">real_end_date,</if>
+            <if test="progress != null">progress,</if>
+            <if test="ownerId != null">owner_id,</if>
+            <if test="ownerName != null">owner_name,</if>
+            <if test="boardStyle != null">board_style,</if>
+            <if test="colWidth != null">col_width,</if>
+            <if test="displayCards != null">display_cards,</if>
+            <if test="fluidBoard != null">fluid_board,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="Budget != null">#{Budget},</if>
+            <if test="requirementCount != null">#{requirementCount},</if>
+            <if test="Investment != null">#{Investment},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="realStartDate != null">#{realStartDate},</if>
+            <if test="realEndDate != null">#{realEndDate},</if>
+            <if test="progress != null">#{progress},</if>
+            <if test="ownerId != null">#{ownerId},</if>
+            <if test="ownerName != null">#{ownerName},</if>
+            <if test="boardStyle != null">#{boardStyle},</if>
+            <if test="colWidth != null">#{colWidth},</if>
+            <if test="displayCards != null">#{displayCards},</if>
+            <if test="fluidBoard != null">#{fluidBoard},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProject" parameterType="Project">
+        update project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="projectCode != null">project_code = #{projectCode},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="Budget != null">Budget = #{Budget},</if>
+            <if test="requirementCount != null">requirement_count = #{requirementCount},</if>
+            <if test="Investment != null">Investment = #{Investment},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="realStartDate != null">real_start_date = #{realStartDate},</if>
+            <if test="realEndDate != null">real_end_date = #{realEndDate},</if>
+            <if test="progress != null">progress = #{progress},</if>
+            <if test="ownerId != null">owner_id = #{ownerId},</if>
+            <if test="ownerName != null">owner_name = #{ownerName},</if>
+            <if test="boardStyle != null">board_style = #{boardStyle},</if>
+            <if test="colWidth != null">col_width = #{colWidth},</if>
+            <if test="displayCards != null">display_cards = #{displayCards},</if>
+            <if test="fluidBoard != null">fluid_board = #{fluidBoard},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteProjectByProjectId" parameterType="Long">
+        delete from project where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectByProjectIds" parameterType="String">
+        delete from project where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteProjectModuleByProjectIds" parameterType="String">
+        delete from project_module where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteProjectModuleByProjectId" parameterType="Long">
+        delete from project_module where project_id = #{projectId}
+    </delete>
+
+    <insert id="batchProjectModule">
+        insert into project_module( module_id, project_id, module_name, parent_id, order_num, create_by, create_time, update_by, update_time, del_flag) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.moduleId}, #{item.projectId}, #{item.moduleName}, #{item.parentId}, #{item.orderNum}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.delFlag})
+        </foreach>
+    </insert>
+</mapper>
