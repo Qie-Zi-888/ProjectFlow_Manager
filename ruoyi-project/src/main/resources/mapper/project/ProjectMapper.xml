@@ -11,9 +11,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="status"    column="status"    />
         <result property="priority"    column="priority"    />
-        <result property="Budget"    column="Budget"    />
+        <result property="budget"    column="budget"    />
         <result property="requirementCount"    column="requirement_count"    />
-        <result property="Investment"    column="Investment"    />
+        <result property="investment"    column="investment"    />
         <result property="startDate"    column="start_date"    />
         <result property="endDate"    column="end_date"    />
         <result property="realStartDate"    column="real_start_date"    />
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectVo">
-        select project_id, project_name, project_code, description, status, priority, Budget, requirement_count, Investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag from project
+        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag from project
     </sql>
 
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
@@ -60,9 +60,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectCode != null  and projectCode != ''"> and project_code = #{projectCode}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="priority != null "> and priority = #{priority}</if>
-            <if test="Budget != null "> and Budget = #{Budget}</if>
+            <if test="budget != null "> and budget = #{budget}</if>
             <if test="requirementCount != null "> and requirement_count = #{requirementCount}</if>
-            <if test="Investment != null "> and Investment = #{Investment}</if>
+            <if test="investment != null "> and investment = #{investment}</if>
             <if test="startDate != null "> and start_date = #{startDate}</if>
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="realStartDate != null "> and real_start_date = #{realStartDate}</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectProjectByProjectId" parameterType="Long" resultMap="ProjectProjectModuleResult">
-        select project_id, project_name, project_code, description, status, priority, Budget, requirement_count, Investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag
+        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag
         from project
         where project_id = #{projectId}
     </select>
@@ -93,9 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">description,</if>
             <if test="status != null">status,</if>
             <if test="priority != null">priority,</if>
-            <if test="Budget != null">Budget,</if>
+            <if test="budget != null">budget,</if>
             <if test="requirementCount != null">requirement_count,</if>
-            <if test="Investment != null">Investment,</if>
+            <if test="investment != null">investment,</if>
             <if test="startDate != null">start_date,</if>
             <if test="endDate != null">end_date,</if>
             <if test="realStartDate != null">real_start_date,</if>
@@ -119,9 +119,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">#{description},</if>
             <if test="status != null">#{status},</if>
             <if test="priority != null">#{priority},</if>
-            <if test="Budget != null">#{Budget},</if>
+            <if test="budget != null">#{budget},</if>
             <if test="requirementCount != null">#{requirementCount},</if>
-            <if test="Investment != null">#{Investment},</if>
+            <if test="investment != null">#{investment},</if>
             <if test="startDate != null">#{startDate},</if>
             <if test="endDate != null">#{endDate},</if>
             <if test="realStartDate != null">#{realStartDate},</if>
@@ -149,9 +149,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null">description = #{description},</if>
             <if test="status != null">status = #{status},</if>
             <if test="priority != null">priority = #{priority},</if>
-            <if test="Budget != null">Budget = #{Budget},</if>
+            <if test="budget != null">budget = #{budget},</if>
             <if test="requirementCount != null">requirement_count = #{requirementCount},</if>
-            <if test="Investment != null">Investment = #{Investment},</if>
+            <if test="investment != null">investment = #{investment},</if>
             <if test="startDate != null">start_date = #{startDate},</if>
             <if test="endDate != null">end_date = #{endDate},</if>
             <if test="realStartDate != null">real_start_date = #{realStartDate},</if>

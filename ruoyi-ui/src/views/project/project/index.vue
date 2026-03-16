@@ -131,9 +131,9 @@
       <el-table-column label="项目名称" align="center" prop="projectName" />
       <el-table-column label="项目状态" align="center" prop="status"  :formatter="statusFormatter"/>
       <el-table-column label="优先级" align="center" prop="priority" />
-      <el-table-column label="预算" align="center" prop="Budget" />
+      <el-table-column label="预算" align="center" prop="budget" />
       <el-table-column label="需求总数" align="center" prop="requirementCount" />
-      <el-table-column label="已投入" align="center" prop="Investment" />
+      <el-table-column label="已投入" align="center" prop="investment" />
       <el-table-column label="计划开始日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
@@ -219,14 +219,14 @@
         <el-form-item label="优先级" prop="priority">
           <el-input v-model="form.priority" placeholder="请输入优先级" />
         </el-form-item>
-        <el-form-item label="预算" prop="Budget">
-          <el-input v-model="form.Budget" placeholder="请输入预算" />
+        <el-form-item label="预算" prop="budget">
+          <el-input v-model="form.budget" placeholder="请输入预算" />
         </el-form-item>
         <el-form-item label="需求总数" prop="requirementCount">
           <el-input v-model="form.requirementCount" placeholder="请输入需求总数" />
         </el-form-item>
-        <el-form-item label="已投入" prop="Investment">
-          <el-input v-model="form.Investment" placeholder="请输入已投入" />
+        <el-form-item label="已投入" prop="investment">
+          <el-input v-model="form.investment" placeholder="请输入已投入" />
         </el-form-item>
         <el-form-item label="计划开始日期" prop="startDate">
           <el-date-picker clearable

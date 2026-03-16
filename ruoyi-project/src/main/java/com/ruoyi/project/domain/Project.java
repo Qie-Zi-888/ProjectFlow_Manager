@@ -41,7 +41,7 @@ public class Project extends BaseEntity
 
     /** 预算 */
     @Excel(name = "预算")
-    private Long Budget;
+    private Long budget;
 
     /** 需求条目数 */
     @Excel(name = "需求条目数")
@@ -49,7 +49,7 @@ public class Project extends BaseEntity
 
     /** 已投入 */
     @Excel(name = "已投入")
-    private Long Investment;
+    private Long investment;
 
     /** 计划开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -160,14 +160,14 @@ public class Project extends BaseEntity
         return priority;
     }
 
-    public void setBudget(Long Budget) 
+    public void setBudget(Long budget) 
     {
-        this.Budget = Budget;
+        this.budget = budget;
     }
 
     public Long getBudget() 
     {
-        return Budget;
+        return budget;
     }
 
     public void setRequirementCount(Long requirementCount) 
@@ -180,14 +180,14 @@ public class Project extends BaseEntity
         return requirementCount;
     }
 
-    public void setInvestment(Long Investment) 
+    public void setInvestment(Long investment) 
     {
-        this.Investment = Investment;
+        this.investment = investment;
     }
 
     public Long getInvestment() 
     {
-        return Investment;
+        return investment;
     }
 
     public void setStartDate(Date startDate) 

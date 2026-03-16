@@ -104,7 +104,7 @@
           <span>{{ parseTime(scope.row.joinTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="已用工时" align="center" prop="Investment" />
+      <el-table-column label="已用工时" align="center" prop="investment" />
       <el-table-column label="创建者" align="center" prop="createBy" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
@@ -165,8 +165,8 @@
             style="width: 100%;">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="已用工时" prop="Investment">
-          <el-input-number v-model="form.Investment" :precision="1" :min="0" :max="9999" :step="0.5" step-strictly placeholder="请输入已用工时" style="width: 100%;" />
+        <el-form-item label="已用工时" prop="investment">
+          <el-input-number v-model="form.investment" :precision="1" :min="0" :max="9999" :step="0.5" step-strictly placeholder="请输入已用工时" style="width: 100%;" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -265,7 +265,7 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        Investment: null
+        investment: null
       }
       this.resetForm("form")
     },

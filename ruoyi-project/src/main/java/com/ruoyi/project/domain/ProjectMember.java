@@ -59,7 +59,7 @@ public class ProjectMember extends BaseEntity
 
     /** 已用工时 */
     @Excel(name = "已用工时")
-    private Long Investment;
+    private Long investment;
 
     public void setId(Long id) 
     {
@@ -161,14 +161,14 @@ public class ProjectMember extends BaseEntity
         return joinTime;
     }
 
-    public void setInvestment(Long Investment) 
+    public void setInvestment(Long investment)
     {
-        this.Investment = Investment;
+        this.investment = investment;
     }
 
     public Long getInvestment() 
     {
-        return Investment;
+        return investment;
     }
 
     @Override
@@ -186,7 +186,7 @@ public class ProjectMember extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
-            .append("Investment", getInvestment())
+            .append("investment", getInvestment())
             .toString();
     }
 }
