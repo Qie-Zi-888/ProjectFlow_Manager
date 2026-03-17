@@ -1,10 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="项目 ID" prop="projectId">
+      <el-form-item label="团队 ID" prop="teamId">
         <el-input
-          v-model="queryParams.projectId"
-          placeholder="请输入项目 ID"
+          v-model="queryParams.teamId"
+          placeholder="请输入团队 ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="团队名称" prop="teamName">
+        <el-input
+          v-model="queryParams.teamName"
+          placeholder="请输入团队名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,8 +103,8 @@
 
     <el-table v-loading="loading" :data="memberList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="项目 ID" align="center" prop="projectId" />
-      <el-table-column label="项目名称" align="center" prop="projectName" />
+      <el-table-column label="团队 ID" align="center" prop="teamId" />
+      <el-table-column label="团队名称" align="center" prop="teamName" />
       <el-table-column label="用户昵称" align="center" prop="nickName" />
       <el-table-column label="项目角色" align="center" prop="projectRole" :formatter="projectRoleFormatter" />
       <el-table-column label="加入时间" align="center" prop="joinTime" width="180">
@@ -142,8 +150,11 @@
     <!-- 添加或修改项目成员对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目 ID" prop="projectId">
-          <el-input v-model="form.projectId" placeholder="请输入项目 ID" />
+        <el-form-item label="团队 ID" prop="teamId">
+          <el-input v-model="form.teamId" placeholder="请输入团队 ID" />
+        </el-form-item>
+        <el-form-item label="团队名称" prop="teamName">
+          <el-input v-model="form.teamName" placeholder="请输入团队名称" />
         </el-form-item>
         <el-form-item label="用户 ID" prop="userId">
           <el-input-number v-model="form.userId" :min="1" :precision="0" step-strictly placeholder="请输入用户 ID" style="width: 100%;" />
@@ -206,7 +217,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        projectId: null,
+        teamId: null,
+        teamName: null,
         nickName: null,
         projectRole: null,
         joinTime: null,
@@ -216,11 +228,11 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        projectId: [
-          { required: true, message: "项目ID不能为空", trigger: "blur" }
+        teamId: [
+          { required: true, message: "团队 ID 不能为空", trigger: "blur" }
         ],
         userId: [
-          { required: true, message: "用户ID不能为空", trigger: "blur" }
+          { required: true, message: "用户 ID 不能为空", trigger: "blur" }
         ],
       }
     }
@@ -257,6 +269,8 @@ export default {
     reset() {
       this.form = {
         id: null,
+        teamId: null,
+        teamName: null,
         projectId: null,
         userId: null,
         projectRole: null,
@@ -289,7 +303,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = "添加项目成员"
+      this.title = "添加团队成员"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -298,7 +312,7 @@ export default {
       getMember(id).then(response => {
         this.form = response.data
         this.open = true
-        this.title = "修改项目成员"
+        this.title = "修改团队成员"
       })
     },
     /** 提交按钮 */
@@ -324,7 +338,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$modal.confirm('是否确认删除项目成员编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除团队成员编号为"' + ids + '"的数据项？').then(function() {
         return delMember(ids)
       }).then(() => {
         this.getList()

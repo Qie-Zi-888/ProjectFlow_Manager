@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.SprintMapper">
+    
+    <resultMap type="Sprint" id="SprintResult">
+        <result property="sprintId"    column="sprint_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="bookmark"    column="bookmark"    />
+        <result property="sprintNumber"    column="sprint_number"    />
+        <result property="sprintName"    column="sprint_name"    />
+        <result property="status"    column="status"    />
+        <result property="progress"    column="progress"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="goal"    column="goal"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="projectName"    column="project_name"    />
+    </resultMap>
+
+    <resultMap id="SprintSprintBurndownResult" type="Sprint" extends="SprintResult">
+        <collection property="sprintBurndownList" ofType="SprintBurndown" column="sprint_id" select="selectSprintBurndownList" />
+    </resultMap>
+
+    <resultMap type="SprintBurndown" id="SprintBurndownResult">
+        <result property="id"    column="id"    />
+        <result property="sprintId"    column="sprint_id"    />
+        <result property="statDate"    column="stat_date"    />
+        <result property="totalTasks"    column="total_tasks"    />
+        <result property="doneTasks"    column="done_tasks"    />
+        <result property="remainingTasks"    column="remaining_tasks"    />
+        <result property="totalHours"    column="total_hours"    />
+        <result property="remainingHours"    column="remaining_hours"    />
+        <result property="idealRemainingHours"    column="ideal_remaining_hours"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSprintVo">
+        select s.sprint_id, s.project_id, s.bookmark, s.sprint_number, s.sprint_name, s.status, s.progress, s.start_date, s.end_date, s.goal, s.create_by, s.create_time, s.update_by, s.update_time, s.del_flag,
+               p.project_name
+        from sprint s
+        left join project p on s.project_id = p.project_id
+    </sql>
+
+    <select id="selectSprintList" parameterType="Sprint" resultMap="SprintResult">
+        <include refid="selectSprintVo"/>
+        <where>  
+            <if test="projectId != null "> and s.project_id = #{projectId}</if>
+            <if test="bookmark != null  and bookmark != ''"> and s.bookmark = #{bookmark}</if>
+            <if test="sprintName != null  and sprintName != ''"> and s.sprint_name like concat('%', #{sprintName}, '%')</if>
+            <if test="status != null "> and s.status = #{status}</if>
+            <if test="progress != null "> and s.progress = #{progress}</if>
+            <if test="startDate != null "> and s.start_date = #{startDate}</if>
+            <if test="endDate != null "> and s.end_date = #{endDate}</if>
+            <if test="goal != null  and goal != ''"> and s.goal = #{goal}</if>
+            <if test="projectName != null  and projectName != ''"> and p.project_name like concat('%', #{projectName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSprintBySprintId" parameterType="Long" resultMap="SprintSprintBurndownResult">
+        select s.sprint_id, s.project_id, s.bookmark, s.sprint_number, s.sprint_name, s.status, s.progress, s.start_date, s.end_date, s.goal, s.create_by, s.create_time, s.update_by, s.update_time, s.del_flag,
+               p.project_name
+        from sprint s
+        left join project p on s.project_id = p.project_id
+        where s.sprint_id = #{sprintId}
+    </select>
+
+    <select id="selectSprintBurndownList" resultMap="SprintBurndownResult">
+        select id, sprint_id, stat_date, total_tasks, done_tasks, remaining_tasks, total_hours, remaining_hours, ideal_remaining_hours, create_time
+        from sprint_burndown
+        where sprint_id = #{sprint_id}
+    </select>
+
+    <insert id="insertSprint" parameterType="Sprint" useGeneratedKeys="true" keyProperty="sprintId">
+        insert into sprint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">project_id,</if>
+            <if test="bookmark != null">bookmark,</if>
+            <if test="sprintNumber != null and sprintNumber != ''">sprint_number,</if>
+            <if test="sprintName != null and sprintName != ''">sprint_name,</if>
+            <if test="status != null">status,</if>
+            <if test="progress != null">progress,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="goal != null">goal,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="bookmark != null">#{bookmark},</if>
+            <if test="sprintNumber != null and sprintNumber != ''">#{sprintNumber},</if>
+            <if test="sprintName != null and sprintName != ''">#{sprintName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="progress != null">#{progress},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="goal != null">#{goal},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSprint" parameterType="Sprint">
+        update sprint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="bookmark != null">bookmark = #{bookmark},</if>
+            <if test="sprintNumber != null and sprintNumber != ''">sprint_number = #{sprintNumber},</if>
+            <if test="sprintName != null and sprintName != ''">sprint_name = #{sprintName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="progress != null">progress = #{progress},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="goal != null">goal = #{goal},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where sprint_id = #{sprintId}
+    </update>
+
+    <delete id="deleteSprintBySprintId" parameterType="Long">
+        delete from sprint where sprint_id = #{sprintId}
+    </delete>
+
+    <delete id="deleteSprintBySprintIds" parameterType="String">
+        delete from sprint where sprint_id in 
+        <foreach item="sprintId" collection="array" open="(" separator="," close=")">
+            #{sprintId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteSprintBurndownBySprintIds" parameterType="String">
+        delete from sprint_burndown where sprint_id in 
+        <foreach item="sprintId" collection="array" open="(" separator="," close=")">
+            #{sprintId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSprintBurndownBySprintId" parameterType="Long">
+        delete from sprint_burndown where sprint_id = #{sprintId}
+    </delete>
+
+    <insert id="batchSprintBurndown">
+        insert into sprint_burndown( id, sprint_id, stat_date, total_tasks, done_tasks, remaining_tasks, total_hours, remaining_hours, ideal_remaining_hours, create_time) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.sprintId}, #{item.statDate}, #{item.totalTasks}, #{item.doneTasks}, #{item.remainingTasks}, #{item.totalHours}, #{item.remainingHours}, #{item.idealRemainingHours}, #{item.createTime})
+        </foreach>
+    </insert>
+</mapper>

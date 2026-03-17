@@ -20,8 +20,16 @@ public class ProjectMember extends BaseEntity
     /** 关联ID */
     private Long id;
 
-    /** 项目ID */
-    @Excel(name = "项目ID")
+    /** 团队 ID */
+    @Excel(name = "团队 ID")
+    private Long teamId;
+
+    /** 团队名称 */
+    @Excel(name = "团队名称")
+    private String teamName;
+
+    /** 项目 ID */
+    @Excel(name = "项目 ID")
     private Long projectId;
 
     /** 用户 ID（关联 sys_user） */
@@ -69,6 +77,26 @@ public class ProjectMember extends BaseEntity
     public Long getId() 
     {
         return id;
+    }
+
+    public void setTeamId(Long teamId) 
+    {
+        this.teamId = teamId;
+    }
+
+    public Long getTeamId() 
+    {
+        return teamId;
+    }
+
+    public void setTeamName(String teamName) 
+    {
+        this.teamName = teamName;
+    }
+
+    public String getTeamName() 
+    {
+        return teamName;
     }
 
     public void setProjectId(Long projectId) 
@@ -175,6 +203,8 @@ public class ProjectMember extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
+            .append("teamId", getTeamId())
+            .append("teamName", getTeamName())
             .append("projectId", getProjectId())
             .append("userId", getUserId())
             .append("projectName", getProjectName())
