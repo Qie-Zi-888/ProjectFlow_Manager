@@ -45,7 +45,7 @@ user:
     # 密码锁定时间（默认10分钟）
     lockTime: 10
 
-# Spring配置
+# Spring 配置
 spring:
   # 资源信息
   messages:
@@ -70,7 +70,7 @@ spring:
     redis:
       # 地址
       host: localhost
-      # 端口，默认为6379
+      # 端口，默认为 6379
       port: 6379
       # 数据库索引
       database: 0
@@ -88,6 +88,15 @@ spring:
           max-active: 8
           # #连接池最大阻塞等待时间（使用负值表示没有限制）
           max-wait: -1ms
+  jackson:
+    # 默认日期格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    # 时区
+    time-zone: GMT+8
+    # 允许接受多种日期格式
+    serialization:
+      write-dates-as-timestamps: false
+
 
 # token 配置
 token:

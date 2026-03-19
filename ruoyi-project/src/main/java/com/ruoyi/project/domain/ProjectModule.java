@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 项目模块对象 project_module
  * 
  * @author Qie_Zi
- * @date 2026-03-14
+ * @date 2026-03-19
  */
 public class ProjectModule extends BaseEntity
 {
@@ -46,6 +46,7 @@ public class ProjectModule extends BaseEntity
     {
         return moduleId;
     }
+
     public void setProjectId(Long projectId) 
     {
         this.projectId = projectId;
@@ -55,6 +56,7 @@ public class ProjectModule extends BaseEntity
     {
         return projectId;
     }
+
     public void setModuleName(String moduleName) 
     {
         this.moduleName = moduleName;
@@ -64,6 +66,7 @@ public class ProjectModule extends BaseEntity
     {
         return moduleName;
     }
+
     public void setParentId(Long parentId) 
     {
         this.parentId = parentId;
@@ -73,6 +76,7 @@ public class ProjectModule extends BaseEntity
     {
         return parentId;
     }
+
     public void setOrderNum(Long orderNum) 
     {
         this.orderNum = orderNum;
@@ -82,6 +86,7 @@ public class ProjectModule extends BaseEntity
     {
         return orderNum;
     }
+
     public void setDelFlag(Long delFlag) 
     {
         this.delFlag = delFlag;

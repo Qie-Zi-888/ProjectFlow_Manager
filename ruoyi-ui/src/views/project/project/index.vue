@@ -482,7 +482,19 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.projectModuleList = this.projectModuleList
+          // 处理子表数据，移除空值字段
+          if (this.projectModuleList && this.projectModuleList.length > 0) {
+            this.form.projectModuleList = this.projectModuleList.map(item => {
+              // 创建一个新对象，只保留有值的字段
+              const newItem = {}
+              for (const key in item) {
+                if (item[key] !== null && item[key] !== '' && item[key] !== undefined) {
+                  newItem[key] = item[key]
+                }
+              }
+              return newItem
+            })
+          }
           if (this.form.projectId != null) {
             updateProject(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
@@ -519,8 +531,6 @@ export default {
       obj.moduleName = ""
       obj.parentId = ""
       obj.orderNum = ""
-      obj.createBy = ""
-      obj.createTime = ""
       this.projectModuleList.push(obj)
     },
     /** 项目模块删除按钮操作 */
