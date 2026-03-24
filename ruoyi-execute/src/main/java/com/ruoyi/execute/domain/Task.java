@@ -1,6 +1,7 @@
 package com.ruoyi.execute.domain;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,7 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 任务对象 task
  * 
  * @author Qie_Zi
- * @date 2026-03-18
+ * @date 2026-03-19
  */
 public class Task extends BaseEntity
 {
@@ -22,15 +23,12 @@ public class Task extends BaseEntity
     private Long taskId;
 
     /** 所属项目 */
-    @Excel(name = "所属项目")
     private Long projectId;
 
     /** 关联需求ID */
-    @Excel(name = "关联需求ID")
     private Long reqId;
 
     /** 所属模块 */
-    @Excel(name = "所属模块")
     private Long moduleId;
 
     /** 任务名称 */
@@ -38,7 +36,6 @@ public class Task extends BaseEntity
     private String taskName;
 
     /** 详细描述 */
-    @Excel(name = "详细描述")
     private String description;
 
     /** 任务类型（development:开发，test:测试，design:设计，meeting:会议等） */
@@ -57,6 +54,10 @@ public class Task extends BaseEntity
     @Excel(name = "指派给")
     private Long assignTo;
 
+    /** 指派给名称 */
+    @Excel(name = "指派给名称")
+    private String assignToName;
+
     /** 预估工时 */
     @Excel(name = "预估工时")
     private BigDecimal estimateTime;
@@ -66,22 +67,19 @@ public class Task extends BaseEntity
     private BigDecimal consumedTime;
 
     /** 计划开始日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "计划开始日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date planStartDate;
 
     /** 计划结束日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "计划结束日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date planEndDate;
 
     /** 截止日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "截止日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date deadline;
 
     /** 删除标志 */
     private Long delFlag;
+
+    /** 工时记录信息 */
+    private List<WorkLog> workLogList;
 
     public void setTaskId(Long taskId) 
     {
@@ -92,6 +90,7 @@ public class Task extends BaseEntity
     {
         return taskId;
     }
+
     public void setProjectId(Long projectId) 
     {
         this.projectId = projectId;
@@ -101,6 +100,7 @@ public class Task extends BaseEntity
     {
         return projectId;
     }
+
     public void setReqId(Long reqId) 
     {
         this.reqId = reqId;
@@ -110,6 +110,7 @@ public class Task extends BaseEntity
     {
         return reqId;
     }
+
     public void setModuleId(Long moduleId) 
     {
         this.moduleId = moduleId;
@@ -119,6 +120,7 @@ public class Task extends BaseEntity
     {
         return moduleId;
     }
+
     public void setTaskName(String taskName) 
     {
         this.taskName = taskName;
@@ -128,6 +130,7 @@ public class Task extends BaseEntity
     {
         return taskName;
     }
+
     public void setDescription(String description) 
     {
         this.description = description;
@@ -137,6 +140,7 @@ public class Task extends BaseEntity
     {
         return description;
     }
+
     public void setTaskType(String taskType) 
     {
         this.taskType = taskType;
@@ -146,6 +150,7 @@ public class Task extends BaseEntity
     {
         return taskType;
     }
+
     public void setPriority(String priority) 
     {
         this.priority = priority;
@@ -155,6 +160,7 @@ public class Task extends BaseEntity
     {
         return priority;
     }
+
     public void setStatus(Long status) 
     {
         this.status = status;
@@ -164,6 +170,7 @@ public class Task extends BaseEntity
     {
         return status;
     }
+
     public void setAssignTo(Long assignTo) 
     {
         this.assignTo = assignTo;
@@ -173,6 +180,17 @@ public class Task extends BaseEntity
     {
         return assignTo;
     }
+
+    public void setAssignToName(String assignToName) 
+    {
+        this.assignToName = assignToName;
+    }
+
+    public String getAssignToName() 
+    {
+        return assignToName;
+    }
+
     public void setEstimateTime(BigDecimal estimateTime) 
     {
         this.estimateTime = estimateTime;
@@ -182,6 +200,7 @@ public class Task extends BaseEntity
     {
         return estimateTime;
     }
+
     public void setConsumedTime(BigDecimal consumedTime) 
     {
         this.consumedTime = consumedTime;
@@ -191,6 +210,7 @@ public class Task extends BaseEntity
     {
         return consumedTime;
     }
+
     public void setPlanStartDate(Date planStartDate) 
     {
         this.planStartDate = planStartDate;
@@ -200,6 +220,7 @@ public class Task extends BaseEntity
     {
         return planStartDate;
     }
+
     public void setPlanEndDate(Date planEndDate) 
     {
         this.planEndDate = planEndDate;
@@ -209,6 +230,7 @@ public class Task extends BaseEntity
     {
         return planEndDate;
     }
+
     public void setDeadline(Date deadline) 
     {
         this.deadline = deadline;
@@ -218,6 +240,7 @@ public class Task extends BaseEntity
     {
         return deadline;
     }
+
     public void setDelFlag(Long delFlag) 
     {
         this.delFlag = delFlag;
@@ -226,6 +249,16 @@ public class Task extends BaseEntity
     public Long getDelFlag() 
     {
         return delFlag;
+    }
+
+    public List<WorkLog> getWorkLogList()
+    {
+        return workLogList;
+    }
+
+    public void setWorkLogList(List<WorkLog> workLogList)
+    {
+        this.workLogList = workLogList;
     }
 
     @Override
@@ -241,6 +274,7 @@ public class Task extends BaseEntity
             .append("priority", getPriority())
             .append("status", getStatus())
             .append("assignTo", getAssignTo())
+            .append("assignToName", getAssignToName())
             .append("estimateTime", getEstimateTime())
             .append("consumedTime", getConsumedTime())
             .append("planStartDate", getPlanStartDate())
@@ -251,6 +285,7 @@ public class Task extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("delFlag", getDelFlag())
+            .append("workLogList", getWorkLogList())
             .toString();
     }
 }
