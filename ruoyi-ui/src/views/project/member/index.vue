@@ -27,10 +27,10 @@
       </el-form-item>
       <el-form-item label="项目角色" prop="projectRole">
         <el-select v-model="queryParams.projectRole" placeholder="请选择项目角色" clearable>
-          <el-option label="负责人" value="owner" />
-          <el-option label="开发" value="developer" />
-          <el-option label="测试" value="tester" />
-          <el-option label="访客" value="visitor" />
+          <el-option label="系统管理员" value="0" />
+          <el-option label="项目经理" value="1" />
+          <el-option label="开发人员" value="2" />
+          <el-option label="测试人员" value="3" />
         </el-select>
       </el-form-item>
       <el-form-item label="加入时间" prop="joinTime">
@@ -161,10 +161,10 @@
         </el-form-item>
         <el-form-item label="项目角色" prop="projectRole">
           <el-select v-model="form.projectRole" placeholder="请选择项目角色" style="width: 100%;">
-            <el-option label="负责人" value="owner" />
-            <el-option label="开发" value="developer" />
-            <el-option label="测试" value="tester" />
-            <el-option label="访客" value="visitor" />
+            <el-option label="系统管理员" value="0" />
+            <el-option label="项目经理" value="1" />
+            <el-option label="开发人员" value="2" />
+            <el-option label="测试人员" value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="加入时间" prop="joinTime">
@@ -253,10 +253,10 @@ export default {
     // 项目角色格式化
     projectRoleFormatter(row) {
       const roleMap = {
-        'owner': '负责人',
-        'developer': '开发',
-        'tester': '测试',
-        'visitor': '访客'
+        '0': '系统管理员',
+        '1': '项目经理',
+        '2': '开发人员',
+        '3': '测试人员'
       }
       return roleMap[row.projectRole] || row.projectRole
     },

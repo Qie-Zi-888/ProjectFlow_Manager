@@ -21,6 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="progress"    column="progress"    />
         <result property="ownerId"    column="owner_id"    />
         <result property="ownerName"    column="owner_name"    />
+        <result property="teamId"    column="team_id"    />
         <result property="boardStyle"    column="board_style"    />
         <result property="colWidth"    column="col_width"    />
         <result property="displayCards"    column="display_cards"    />
@@ -50,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectVo">
-        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag from project
+        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, team_id, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag from project
     </sql>
 
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
@@ -69,12 +70,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="realEndDate != null "> and real_end_date = #{realEndDate}</if>
             <if test="progress != null "> and progress = #{progress}</if>
             <if test="ownerName != null  and ownerName != ''"> and owner_name like concat('%', #{ownerName}, '%')</if>
+            <if test="teamId != null "> and team_id = #{teamId}</if>
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
         </where>
     </select>
     
     <select id="selectProjectByProjectId" parameterType="Long" resultMap="ProjectProjectModuleResult">
-        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag
+        select project_id, project_name, project_code, description, status, priority, budget, requirement_count, investment, start_date, end_date, real_start_date, real_end_date, progress, owner_id, owner_name, team_id, board_style, col_width, display_cards, fluid_board, create_by, create_time, update_by, update_time, del_flag
         from project
         where project_id = #{projectId}
     </select>
@@ -103,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="progress != null">progress,</if>
             <if test="ownerId != null">owner_id,</if>
             <if test="ownerName != null">owner_name,</if>
+            <if test="teamId != null">team_id,</if>
             <if test="boardStyle != null">board_style,</if>
             <if test="colWidth != null">col_width,</if>
             <if test="displayCards != null">display_cards,</if>
@@ -129,6 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="progress != null">#{progress},</if>
             <if test="ownerId != null">#{ownerId},</if>
             <if test="ownerName != null">#{ownerName},</if>
+            <if test="teamId != null">#{teamId},</if>
             <if test="boardStyle != null">#{boardStyle},</if>
             <if test="colWidth != null">#{colWidth},</if>
             <if test="displayCards != null">#{displayCards},</if>
@@ -159,6 +163,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="progress != null">progress = #{progress},</if>
             <if test="ownerId != null">owner_id = #{ownerId},</if>
             <if test="ownerName != null">owner_name = #{ownerName},</if>
+            <if test="teamId != null">team_id = #{teamId},</if>
             <if test="boardStyle != null">board_style = #{boardStyle},</if>
             <if test="colWidth != null">col_width = #{colWidth},</if>
             <if test="displayCards != null">display_cards = #{displayCards},</if>

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import logoImg from '@/assets/logo/logo.png'
+import logoImg from '@/assets/logo/logomy.png'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
@@ -71,7 +71,7 @@ export default {
       width: 32px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
+      margin-right: 6px;
     }
 
     & .sidebar-title {

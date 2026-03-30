@@ -56,8 +56,8 @@ public class ProjectMember extends BaseEntity
     @Excel(name = "用户手机号")
     private String phonenumber;
 
-    /** 项目角色（owner:负责人，developer:开发，tester:测试，visitor:访客） */
-    @Excel(name = "项目角色", readConverterExp = "o=wner:负责人，developer:开发，tester:测试，visitor:访客")
+    /** 项目角色（0:系统管理员，1:项目经理，2:开发人员，3:测试人员） */
+    @Excel(name = "项目角色", readConverterExp = "0=系统管理员，1=项目经理，2=开发人员，3=测试人员")
     private String projectRole;
 
     /** 加入时间 */
