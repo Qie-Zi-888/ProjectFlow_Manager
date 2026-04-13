@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ProjectModule" id="ProjectModuleResult">
         <result property="moduleId"    column="module_id"    />
         <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
         <result property="moduleName"    column="module_name"    />
         <result property="parentId"    column="parent_id"    />
         <result property="orderNum"    column="order_num"    />
@@ -18,17 +19,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectModuleVo">
-        select module_id, project_id, module_name, parent_id, order_num, create_by, create_time, update_by, update_time, del_flag from project_module
+        select pm.module_id, pm.project_id, p.project_name, pm.module_name, pm.parent_id, pm.order_num, pm.create_by, pm.create_time, pm.update_by, pm.update_time, pm.del_flag from project_module pm left join project p on pm.project_id = p.project_id
     </sql>
 
     <select id="selectProjectModuleList" parameterType="ProjectModule" resultMap="ProjectModuleResult">
         <include refid="selectProjectModuleVo"/>
         <where>  
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="moduleName != null  and moduleName != ''"> and module_name like concat('%', #{moduleName}, '%')</if>
-            <if test="parentId != null "> and parent_id = #{parentId}</if>
-            <if test="orderNum != null "> and order_num = #{orderNum}</if>
-            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="projectName != null and projectName != ''"> and p.project_name like concat('%', #{projectName}, '%')</if>
+            <if test="projectId != null "> and pm.project_id = #{projectId}</if>
+            <if test="moduleName != null  and moduleName != ''"> and pm.module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="parentId != null "> and pm.parent_id = #{parentId}</if>
+            <if test="orderNum != null "> and pm.order_num = #{orderNum}</if>
+            <if test="createBy != null  and createBy != ''"> and pm.create_by = #{createBy}</if>
         </where>
     </select>
     

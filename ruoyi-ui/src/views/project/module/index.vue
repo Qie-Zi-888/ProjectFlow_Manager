@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="项目名" prop="projectName">
+        <el-input
+          v-model="queryParams.projectName"
+          placeholder="请输入项目名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="项目ID" prop="projectId">
         <el-input
           v-model="queryParams.projectId"
@@ -96,7 +104,7 @@
     <el-table v-loading="loading" :data="moduleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模块ID" align="center" prop="moduleId" />
-      <el-table-column label="项目ID" align="center" prop="projectId" />
+      <el-table-column label="项目名" align="center" prop="projectName" />
       <el-table-column label="模块名称" align="center" prop="moduleName" />
       <el-table-column label="父模块ID" align="center" prop="parentId" />
       <el-table-column label="显示顺序" align="center" prop="orderNum" />
@@ -125,7 +133,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -190,6 +198,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        projectName: null,
         projectId: null,
         moduleName: null,
         parentId: null,

@@ -22,6 +22,10 @@ public class ProjectModule extends BaseEntity
     @Excel(name = "项目ID")
     private Long projectId;
 
+    /** 项目名称（来自 project 表） */
+    @Excel(name = "项目名称")
+    private String projectName;
+
     /** 模块名称 */
     @Excel(name = "模块名称")
     private String moduleName;
@@ -55,6 +59,16 @@ public class ProjectModule extends BaseEntity
     public Long getProjectId() 
     {
         return projectId;
+    }
+
+    public void setProjectName(String projectName) 
+    {
+        this.projectName = projectName;
+    }
+
+    public String getProjectName() 
+    {
+        return projectName;
     }
 
     public void setModuleName(String moduleName) 
@@ -102,6 +116,7 @@ public class ProjectModule extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("moduleId", getModuleId())
             .append("projectId", getProjectId())
+            .append("projectName", getProjectName())
             .append("moduleName", getModuleName())
             .append("parentId", getParentId())
             .append("orderNum", getOrderNum())
