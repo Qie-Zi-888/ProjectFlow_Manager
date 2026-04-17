@@ -25,7 +25,7 @@ public class ProjectModule extends BaseEntity
     @Excel(name = "项目名称")
     private String projectName;
 
-    /** 模块名称 */
+    /** 模块名称 **/
     @Excel(name = "模块名称")
     private String moduleName;
 
