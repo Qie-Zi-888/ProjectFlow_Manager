@@ -1,6 +1,7 @@
 package com.ruoyi.project.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,5 +131,68 @@ public class ProjectServiceImpl implements IProjectService
                 projectMapper.batchProjectModule(list);
             }
         }
+    }
+
+    /**
+     * 查询项目统计信息（用于仪表盘）
+     */
+    @Override
+    public List<Map<String, Object>> selectProjectStatistics()
+    {
+        return projectMapper.selectProjectStatistics();
+    }
+
+    /**
+     * 查询项目状态分布（用于仪表盘）
+     */
+    @Override
+    public List<Map<String, Object>> selectProjectStatusDistribution()
+    {
+        return projectMapper.selectProjectStatusDistribution();
+    }
+
+    /**
+     * 查询最近项目列表（用于仪表盘）
+     */
+    @Override
+    public List<Map<String, Object>> selectRecentProjects(Integer limit)
+    {
+        return projectMapper.selectRecentProjects(limit);
+    }
+
+    /**
+     * 查询未关闭的项目列表（用于仪表盘）
+     */
+    @Override
+    public List<Map<String, Object>> selectUnclosedProjects()
+    {
+        return projectMapper.selectUnclosedProjects();
+    }
+
+    /**
+     * 查询年度项目排名（用于仪表盘发布榜）
+     */
+    @Override
+    public List<Map<String, Object>> selectAnnualProjectRanking()
+    {
+        return projectMapper.selectAnnualProjectRanking();
+    }
+
+    /**
+     * 查询指定项目的需求统计数据
+     */
+    @Override
+    public Map<String, Object> selectProjectRequirementStats(Long projectId)
+    {
+        return projectMapper.selectProjectRequirementStats(projectId);
+    }
+
+    /**
+     * 查询指定项目的月度需求趋势
+     */
+    @Override
+    public List<Map<String, Object>> selectProjectMonthTrend(Long projectId)
+    {
+        return projectMapper.selectProjectMonthTrend(projectId);
     }
 }

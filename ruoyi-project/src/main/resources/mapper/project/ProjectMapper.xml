@@ -205,4 +205,99 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.moduleId}, #{item.projectId}, #{item.moduleName}, #{item.parentId}, #{item.orderNum}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.delFlag})
         </foreach>
     </insert>
+
+    <!-- 仪表盘查询：项目统计信息 -->
+    <select id="selectProjectStatistics" resultType="java.util.HashMap">
+        select project_id, status, end_date 
+        from project 
+        where del_flag = 0 
+        order by create_time desc
+    </select>
+
+    <!-- 仪表盘查询：项目状态分布 -->
+    <select id="selectProjectStatusDistribution" resultType="java.util.HashMap">
+        select 
+            case status 
+                when 0 then '进行中' 
+                when 1 then '已完成' 
+                when 2 then '暂停' 
+                when 3 then '已取消' 
+                else '未知' 
+            end as statusName,
+            count(*) as count
+        from project 
+        where del_flag = 0 
+        group by status
+    </select>
+
+    <!-- 仪表盘查询：最近项目列表 -->
+    <select id="selectRecentProjects" parameterType="Integer" resultType="java.util.HashMap">
+        select 
+            p.project_id as projectId,
+            p.project_name as projectName,
+            p.project_code as projectCode,
+            p.status,
+            p.priority,
+            p.progress,
+            p.owner_name as ownerName,
+            p.create_time as createTime
+        from project p
+        where p.del_flag = 0
+        order by p.create_time desc
+        limit #{limit}
+    </select>
+
+    <!-- 仪表盘查询：未关闭的项目列表 -->
+    <select id="selectUnclosedProjects" resultType="java.util.HashMap">
+        select 
+            p.project_id as projectId,
+            p.project_name as projectName
+        from project p
+        where p.del_flag = 0 and p.status != 1
+        order by p.create_time desc
+    </select>
+
+    <!-- 仪表盘查询：年度项目排名（按已完成需求数排名） -->
+    <select id="selectAnnualProjectRanking" resultType="java.util.HashMap">
+        select 
+            p.project_name as projectName,
+            count(r.req_id) as completedCount
+        from project p
+        left join requirement r on p.project_id = r.project_id 
+            and r.del_flag = 0 
+            and r.status in (2, 3)
+            and YEAR(r.update_time) = YEAR(CURDATE())
+        where p.del_flag = 0
+        group by p.project_id, p.project_name
+        having completedCount > 0
+        order by completedCount desc
+        limit 10
+    </select>
+
+    <!-- 仪表盘查询：指定项目的需求统计数据 -->
+    <select id="selectProjectRequirementStats" parameterType="Long" resultType="java.util.HashMap">
+        select 
+            count(*) as totalRequirements,
+            sum(case when status in (2, 3) then 1 else 0 end) as completedRequirements,
+            sum(case when status in (0, 1) then 1 else 0 end) as activeRequirements,
+            sum(case when status in (2, 3) and MONTH(update_time) = MONTH(CURDATE()) and YEAR(update_time) = YEAR(CURDATE()) then 1 else 0 end) as thisMonthCompleted,
+            sum(case when MONTH(create_time) = MONTH(CURDATE()) and YEAR(create_time) = YEAR(CURDATE()) then 1 else 0 end) as thisMonthNew
+        from requirement
+        where project_id = #{projectId}
+        and del_flag = 0
+    </select>
+
+    <!-- 仪表盘查询：指定项目的月度需求趋势 -->
+    <select id="selectProjectMonthTrend" parameterType="Long" resultType="java.util.HashMap">
+        select 
+            DATE_FORMAT(create_time, '%Y-%m') as month,
+            count(*) as newCount,
+            sum(case when status in (2, 3) then 1 else 0 end) as completedCount
+        from requirement
+        where project_id = #{projectId}
+        and del_flag = 0
+        and create_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        group by DATE_FORMAT(create_time, '%Y-%m')
+        order by month asc
+    </select>
 </mapper>

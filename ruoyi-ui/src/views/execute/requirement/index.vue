@@ -77,6 +77,19 @@
           <el-option label="低" value="4" />
         </el-select>
       </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择状态"
+          clearable
+          style="width: 120px"
+        >
+          <el-option label="草稿" value="0" />
+          <el-option label="进行中" value="1" />
+          <el-option label="已解决" value="2" />
+          <el-option label="关闭" value="3" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="指派给" prop="assignToName">
         <el-input
           v-model="queryParams.assignToUserName"
@@ -499,12 +512,21 @@ export default {
     },
     /** 状态格式化显示 */
     statusFormat(row, column) {
-      const status = row.status
+      const status = String(row.status)
       if (status === '0') return '草稿'
       if (status === '1') return '进行中'
       if (status === '2') return '已解决'
       if (status === '3') return '关闭'
-      return status
+      return row.status
+    },
+    /** 优先级格式化显示 */
+    priorityFormat(row, column) {
+      const priority = String(row.priority)
+      if (priority === '1') return '最高'
+      if (priority === '2') return '高'
+      if (priority === '3') return '中'
+      if (priority === '4') return '低'
+      return row.priority
     },
     // 取消按钮
     cancel() {
