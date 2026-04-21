@@ -66,8 +66,8 @@
             <div class="panel-body" style="padding: 0;">
               <div class="block-statistic">
                 <div class="block-statistic-nav">
-                  <div 
-                    v-for="(project, index) in unclosedProjects" 
+                  <div
+                    v-for="(project, index) in unclosedProjects"
                     :key="project.projectId"
                     :class="['nav-item', { active: selectedProject && selectedProject.projectId === project.projectId }]"
                     @click="selectProject(project)"
@@ -150,8 +150,8 @@
             <div class="panel-body" style="padding: 0;">
               <div class="block-statistic">
                 <div class="block-statistic-nav">
-                  <div 
-                    v-for="(project, index) in unclosedProjects" 
+                  <div
+                    v-for="(project, index) in unclosedProjects"
                     :key="project.projectId"
                     :class="['nav-item', { active: selectedBugProject && selectedBugProject.projectId === project.projectId }]"
                     @click="selectBugProject(project)"
@@ -266,8 +266,8 @@
                   📊 年度发布榜（{{ currentYear }}年）
                 </div>
                 <div v-if="annualRanking.length > 0">
-                  <div 
-                    v-for="(item, index) in annualRanking" 
+                  <div
+                    v-for="(item, index) in annualRanking"
                     :key="index"
                     class="ranking-item"
                   >
@@ -437,32 +437,32 @@ export default {
     async loadAnnualStats() {
       try {
         const thisYear = new Date().getFullYear()
-        
+
         // 已完成发布数（暂时使用项目完成数代替）
         const projectResponse = await listProject({ pageNum: 1, pageSize: 1000 })
         if (projectResponse.code === 200 && projectResponse.rows) {
           const completedProjects = projectResponse.rows.filter(p => p.status === 1)
           this.annualStats.completedReleases = completedProjects.length
         }
-        
+
         // 获取需求数据
         const reqResponse = await listRequirement({ pageNum: 1, pageSize: 1000 })
         if (reqResponse.code === 200 && reqResponse.rows) {
           const requirements = reqResponse.rows
-          
+
           // 今年已完成需求数（只统计已解决的需求，不包括已关闭）
           const completedReqs = requirements.filter(r => {
             const updateTime = new Date(r.updateTime || r.createTime)
             return r.status === 2 && updateTime.getFullYear() === thisYear
           })
-          
+
           this.annualStats.completedRequirements = completedReqs.length
-          
+
           // 已完成需求规模（工时）= 总工时 / 已完成需求数
           const totalHours = completedReqs.reduce((sum, r) => {
             return sum + (parseFloat(r.estimateTime) || 0)
           }, 0)
-          
+
           if (this.annualStats.completedRequirements > 0) {
             this.annualStats.completedRequirementHours = totalHours / this.annualStats.completedRequirements
           } else {
@@ -575,7 +575,7 @@ export default {
     async selectProject(project) {
       this.selectedProject = project
       console.log('切换到项目（需求统计）:', project.projectName)
-      
+
       // 加载该项目的需求统计数据
       if (project.projectId) {
         await Promise.all([
@@ -603,17 +603,17 @@ export default {
           this.requirementStats.active = parseInt(stats.activeRequirements) || 0
           this.requirementStats.thisMonthNew = parseInt(stats.thisMonthNew) || 0
           this.requirementStats.thisMonthCompleted = parseInt(stats.thisMonthCompleted) || 0
-          
+
           // 计算需求交付率
           const total = parseInt(stats.totalRequirements) || 0
           const completed = parseInt(stats.completedRequirements) || 0
           const deliveryRate = total > 0 ? Math.round((completed / total) * 100) : 0
-          
+
           // 更新环形进度图
           this.$nextTick(() => {
             this.updateProgressCircle(deliveryRate, completed, total - completed)
           })
-          
+
           console.log('项目需求统计:', stats, '交付率:', deliveryRate + '%')
         }
       } catch (error) {
@@ -628,7 +628,7 @@ export default {
       if (progressValueEl) {
         progressValueEl.textContent = percentage
       }
-      
+
       // 更新SVG圆环的进度
       const circle = document.querySelector('.progress-circle svg circle:nth-child(2)')
       if (circle) {
@@ -636,7 +636,7 @@ export default {
         const offset = circumference - (circumference * percentage / 100)
         circle.style.strokeDashoffset = offset
       }
-      
+
       // 更新统计数据
       const statCols = document.querySelectorAll('.stat-col-value')
       if (statCols.length >= 3) {
@@ -652,32 +652,32 @@ export default {
         const response = await getProjectMonthTrend(projectId)
         if (response.code === 200 && response.data) {
           const trendData = response.data
-          
+
           // 生成最近6个月的月份
           const months = []
           const requirementNew = []
           const requirementCompleted = []
-          
+
           const now = new Date()
           for (let i = 5; i >= 0; i--) {
             const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
             const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
             months.push(monthStr)
-            
+
             // 查找该月的数据
             const monthData = trendData.find(d => d.month === monthStr)
             requirementNew.push(monthData ? parseInt(monthData.newCount) : 0)
             requirementCompleted.push(monthData ? parseInt(monthData.completedCount) : 0)
           }
-          
-          this.monthTrend = { 
-            months, 
-            requirementNew, 
+
+          this.monthTrend = {
+            months,
+            requirementNew,
             requirementCompleted,
             taskNew: [],
             taskCompleted: []
           }
-          
+
           // 重新渲染图表
           this.$nextTick(() => {
             if (this.storyChart) {
@@ -685,7 +685,7 @@ export default {
             }
             this.initStoryTrendChart()
           })
-          
+
           console.log('项目月度趋势:', this.monthTrend)
         }
       } catch (error) {
@@ -949,7 +949,7 @@ export default {
 }
 
 .panel-body {
-  padding: 16px;
+  padding: 11px;
 }
 
 /* 产品总览样式 */
