@@ -161,6 +161,20 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+  {
+    path: '/project/view',
+    component: Layout,
+    hidden: true,
+    permissions: ['project:project:view'],
+    children: [
+      {
+        path: ':projectId(\\d+)',
+        component: () => import('@/views/project/view/index'),
+        name: 'ProjectView',
+        meta: { title: '项目视图', activeMenu: '/project/project' }
+      }
+    ]
   }
 ]
 

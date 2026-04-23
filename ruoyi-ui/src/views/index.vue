@@ -365,17 +365,17 @@ export default {
       recentProjects: [
         {
           id: 1,
-          name: 'like的第二个项目',
+          name: '电商平台重构',
           members: 6,
           endDate: '2026-04-30',
           execution: '需求',
           statusText: '进行中',
           statusClass: 'status-doing',
-          progress: 100
+          progress: 80
         },
         {
           id: 2,
-          name: 'like的第一个项目',
+          name: '企业OA系统开发',
           members: 1,
           endDate: '2026-04-30',
           execution: null,
@@ -385,13 +385,13 @@ export default {
         },
         {
           id: 3,
-          name: '大屏项目-2',
+          name: '智慧园区管理平台',
           members: 1,
           endDate: '2026-04-30',
           execution: '大屏项目5月上线',
           statusText: '进行中',
           statusClass: 'status-doing',
-          progress: 100
+          progress:50
         }
       ],
       activities: [

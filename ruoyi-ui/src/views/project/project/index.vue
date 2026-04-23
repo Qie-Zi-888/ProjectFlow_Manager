@@ -128,48 +128,90 @@
     <el-table v-loading="loading" :data="projectList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="项目ID" align="center" prop="projectId" />
-      <el-table-column label="项目名称" align="center" prop="projectName" />
+      <el-table-column label="项目名称" align="center" prop="projectName" width="200" :show-overflow-tooltip="true" />
       <el-table-column label="项目状态" align="center" prop="status"  :formatter="statusFormatter"/>
       <el-table-column label="优先级" align="center" prop="priority" />
-      <el-table-column label="预算" align="center" prop="budget" />
+      <el-table-column label="预算" align="center" prop="budget" :formatter="budgetFormatter" />
       <el-table-column label="需求总数" align="center" prop="requirementCount" />
-      <el-table-column label="已投入" align="center" prop="investment" />
-      <el-table-column label="计划开始日期" align="center" prop="startDate" width="180">
+      <el-table-column label="已投入" align="center" prop="investment" :formatter="investmentFormatter" />
+      <el-table-column label="计划开始日期" align="center" prop="startDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划结束日期" align="center" prop="endDate" width="180">
+      <el-table-column label="计划结束日期" align="center" prop="endDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="实际开始日期" align="center" prop="realStartDate" width="180">
+      <el-table-column label="实际开始日期" align="center" prop="realStartDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.realStartDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="实际结束日期" align="center" prop="realEndDate" width="180">
+      <el-table-column label="实际结束日期" align="center" prop="realEndDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.realEndDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目进度" align="center" prop="progress" />
+      <el-table-column label="项目进度" align="center" prop="progress" width="100">
+        <template slot-scope="scope">
+          <div class="progress-circle-wrapper">
+            <svg class="progress-ring" width="48" height="48">
+              <!-- 背景圆环 -->
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                stroke-width="3"
+                stroke="#e5e6eb"
+                fill="transparent"
+              />
+              <!-- 进度圆环 -->
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                stroke-width="3"
+                stroke="#2B80FF"
+                fill="transparent"
+                stroke-linecap="round"
+                :stroke-dasharray="circumference"
+                :stroke-dashoffset="circumference - (circumference * (scope.row.progress || 0) / 100)"
+                style="transform-origin: center center; transform: rotate(-90deg);"
+              />
+            </svg>
+            <div class="progress-text">{{ scope.row.progress || 0 }}%</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="项目负责人姓名" align="center" prop="ownerName" />
       <el-table-column label="创建者" align="center" prop="createBy" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新者" align="center" prop="updateBy" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="更新时间" align="center" prop="updateTime" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+          >视图</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-user"
+            @click="handleTeam(scope.row)"
+          >团队</el-button>
           <el-button
             size="mini"
             type="text"
@@ -388,6 +430,12 @@ export default {
   created() {
     this.getList()
   },
+  computed: {
+    // 计算圆环周长 (2 * PI * r, r=20)
+    circumference() {
+      return 2 * Math.PI * 20
+    }
+  },
   methods: {
     /** 查询项目列表 */
     getList() {
@@ -407,6 +455,20 @@ export default {
         '3': '已取消'
       }
       return statusMap[row.status] || row.status
+    },
+    // 预算格式化
+    budgetFormatter(row) {
+      if (row.budget !== null && row.budget !== undefined && row.budget !== '') {
+        return row.budget + '万'
+      }
+      return ''
+    },
+    // 已投入格式化
+    investmentFormatter(row) {
+      if (row.investment !== null && row.investment !== undefined && row.investment !== '') {
+        return row.investment + '万'
+      }
+      return ''
     },
     // 取消按钮
     cancel() {
@@ -476,6 +538,18 @@ export default {
         this.projectModuleList = response.data.projectModuleList
         this.open = true
         this.title = "修改项目"
+      })
+    },
+    /** 团队按钮操作 */
+    handleTeam(row) {
+      // TODO: 跳转到团队管理页面或打开团队对话框
+      this.$modal.msgInfo("团队功能开发中...")
+    },
+    /** 视图按钮操作 */
+    handleView(row) {
+      // 跳转到项目视图页面
+      this.$router.push({
+        path: '/project/view/' + row.projectId
       })
     },
     /** 提交按钮 */
@@ -558,3 +632,35 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* 增加表格行高 */
+::v-deep .el-table td,
+::v-deep .el-table th {
+  padding: 12px 0;
+}
+
+/* 环形进度条样式 */
+.progress-circle-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.progress-text {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: bold;
+  color: #3c4353;
+}
+</style>

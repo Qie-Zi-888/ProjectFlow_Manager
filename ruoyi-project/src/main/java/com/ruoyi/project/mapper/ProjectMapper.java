@@ -136,4 +136,13 @@ public interface ProjectMapper
      * @return 月度需求趋势列表
      */
     public List<java.util.Map<String, Object>> selectProjectMonthTrend(Long projectId);
+
+    /**
+     * 查询用户参与的项目列表（用于首页）
+     * 
+     * @param userId 用户ID
+     * @param limit 限制条数
+     * @return 用户参与的项目列表
+     */
+    public List<java.util.Map<String, Object>> selectUserProjects(Long userId, Integer limit);
 }
