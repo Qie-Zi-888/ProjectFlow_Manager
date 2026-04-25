@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.project.service.IProjectService;
+import com.ruoyi.defects.service.IBugService;
 
 /**
  * 项目仪表盘Controller
@@ -25,6 +26,9 @@ public class ProjectDashboardController extends BaseController
 {
     @Autowired
     private IProjectService projectService;
+
+    @Autowired
+    private IBugService bugService;
 
     /**
      * 获取项目统计概览
@@ -142,6 +146,34 @@ public class ProjectDashboardController extends BaseController
             return AjaxResult.error("项目ID不能为空");
         }
         List<Map<String, Object>> trend = projectService.selectProjectMonthTrend(projectId);
+        return AjaxResult.success(trend);
+    }
+
+    /**
+     * 获取指定项目的Bug统计数据
+     */
+    @GetMapping("/projectBugStats")
+    public AjaxResult getProjectBugStats(Long projectId)
+    {
+        if (projectId == null)
+        {
+            return AjaxResult.error("项目ID不能为空");
+        }
+        Map<String, Object> stats = bugService.selectProjectBugStats(projectId);
+        return AjaxResult.success(stats);
+    }
+
+    /**
+     * 获取指定项目的Bug月度趋势
+     */
+    @GetMapping("/projectBugMonthTrend")
+    public AjaxResult getProjectBugMonthTrend(Long projectId)
+    {
+        if (projectId == null)
+        {
+            return AjaxResult.error("项目ID不能为空");
+        }
+        List<Map<String, Object>> trend = bugService.selectProjectBugMonthTrend(projectId);
         return AjaxResult.success(trend);
     }
 }

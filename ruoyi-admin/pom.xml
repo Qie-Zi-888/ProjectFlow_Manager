@@ -66,6 +66,12 @@
             <artifactId>ruoyi-execute</artifactId>
         </dependency>
 
+        <!-- 缺陷管理模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-defects</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

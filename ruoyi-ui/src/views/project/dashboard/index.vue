@@ -162,7 +162,7 @@
                     暂无未关闭项目
                   </div>
                 </div>
-                <div class="block-statistic-panes" style="padding: 16px 16px 16px 0;">
+                <div class="block-statistic-panes bug-statistic-panes" style="padding: 16px 16px 16px 0;">
                   <!-- Bug解决率区域 -->
                   <div style="display: flex; height: 100%; padding-left: 0;">
                     <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -227,37 +227,53 @@
         <!-- 产品发布统计 -->
         <div class="dashboard-block">
           <div class="panel">
-            <div class="panel-heading">
+            <div class="panel-heading" style="border-bottom: 1px solid #e5e6eb;">
               <div class="panel-title">产品发布统计</div>
+              <div class="toolbar">
+                <a href="#" class="btn ghost size-sm" style="text-decoration: none; color: #2B80FF; font-size: 14px;">
+                  <span>更多</span>
+                  <span style="margin-left: 4px;">›</span>
+                </a>
+              </div>
             </div>
             <div class="panel-body">
               <div class="chart-title" style="font-size: 13px; margin-bottom: 12px;">月度发布次数趋势图</div>
               <div class="bar-chart">
                 <div class="bar-item">
                   <div class="bar" style="height: 100px;">
-                    <div class="bar-value">1</div>
+                    <div class="bar-value">5</div>
                   </div>
-                  <div class="bar-label">11月</div>
-                </div>
-                <div class="bar-item">
-                  <div class="bar" style="height: 2px; background: #e5e6eb;"></div>
                   <div class="bar-label">12月</div>
                 </div>
                 <div class="bar-item">
-                  <div class="bar" style="height: 2px; background: #e5e6eb;"></div>
+                  <div class="bar" style="height: 60px;">
+                    <div class="bar-value">3</div>
+                  </div>
                   <div class="bar-label">1月</div>
                 </div>
                 <div class="bar-item">
-                  <div class="bar" style="height: 2px; background: #e5e6eb;"></div>
+                  <div class="bar" style="height: 40px;">
+                    <div class="bar-value">2</div>
+                  </div>
                   <div class="bar-label">2月</div>
                 </div>
                 <div class="bar-item">
-                  <div class="bar" style="height: 2px; background: #e5e6eb;"></div>
+                  <div class="bar" style="height: 80px;">
+                    <div class="bar-value">4</div>
+                  </div>
                   <div class="bar-label">3月</div>
                 </div>
                 <div class="bar-item">
-                  <div class="bar" style="height: 2px; background: #e5e6eb;"></div>
+                  <div class="bar" style="height: 60px;">
+                    <div class="bar-value">3</div>
+                  </div>
                   <div class="bar-label">4月</div>
+                </div>
+                <div class="bar-item">
+                  <div class="bar" style="height: 20px;">
+                    <div class="bar-value">1</div>
+                  </div>
+                  <div class="bar-label">5月</div>
                 </div>
               </div>
 
@@ -329,7 +345,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getStatistics, getStatusDistribution, getRecentProjects, getUnclosedProjects, getAnnualRanking, getProjectRequirementStats, getProjectMonthTrend } from '@/api/project/dashboard'
+import { getStatistics, getStatusDistribution, getRecentProjects, getUnclosedProjects, getAnnualRanking, getProjectRequirementStats, getProjectMonthTrend, getProjectBugStats, getProjectBugMonthTrend } from '@/api/project/dashboard'
 import { listProject } from '@/api/project/project'
 import { listRequirement } from '@/api/execute/requirement'
 import { listTask } from '@/api/execute/task'
@@ -354,6 +370,22 @@ export default {
         active: 0,
         thisMonthNew: 0,
         thisMonthCompleted: 0
+      },
+      // Bug统计（用于未关闭的Bug统计区域）
+      bugStats: {
+        totalBugs: 0,
+        unclosedBugs: 0,
+        resolvedBugs: 0,
+        closedBugs: 0,
+        rejectedBugs: 0,
+        thisMonthNew: 0,
+        thisMonthResolved: 0
+      },
+      // Bug月度趋势数据
+      bugMonthTrend: {
+        months: [],
+        bugNew: [],
+        bugResolved: []
       },
       // 产品年度推进统计（全局数据，不受项目选择影响）
       annualStats: {
@@ -556,13 +588,15 @@ export default {
         const response = await getUnclosedProjects()
         if (response.code === 200) {
           this.unclosedProjects = response.data || []
-          // 默认选中第一个项目并加载其需求统计
+          // 默认选中第一个项目并加载其需求统计、Bug统计和月度趋势
           if (this.unclosedProjects.length > 0) {
             this.selectedProject = this.unclosedProjects[0]
             this.selectedBugProject = this.unclosedProjects[0]
             await Promise.all([
               this.loadProjectRequirementStats(this.unclosedProjects[0].projectId),
-              this.loadProjectMonthTrend(this.unclosedProjects[0].projectId)
+              this.loadProjectMonthTrend(this.unclosedProjects[0].projectId),
+              this.loadProjectBugStats(this.unclosedProjects[0].projectId),
+              this.loadProjectBugMonthTrend(this.unclosedProjects[0].projectId)
             ])
           }
         }
@@ -589,7 +623,13 @@ export default {
     async selectBugProject(project) {
       this.selectedBugProject = project
       console.log('切换到项目（Bug统计）:', project.projectName)
-      // Bug统计暂时只记录选中状态，后续可扩展
+      // 加载选中项目的Bug统计数据和月度趋势
+      if (project.projectId) {
+        await Promise.all([
+          this.loadProjectBugStats(project.projectId),
+          this.loadProjectBugMonthTrend(project.projectId)
+        ])
+      }
     },
 
     // 加载指定项目的需求统计
@@ -643,6 +683,132 @@ export default {
         statCols[0].textContent = completed + active // 有效需求
         statCols[1].textContent = completed // 已交付
         statCols[2].textContent = active // 未关闭
+      }
+    },
+
+    // 加载指定项目的Bug统计
+    async loadProjectBugStats(projectId) {
+      try {
+        const response = await getProjectBugStats(projectId)
+        if (response.code === 200 && response.data) {
+          const stats = response.data
+          // 更新Bug统计数据
+          this.bugStats.totalBugs = parseInt(stats.totalBugs) || 0
+          this.bugStats.unclosedBugs = parseInt(stats.unclosedBugs) || 0
+          this.bugStats.resolvedBugs = parseInt(stats.resolvedBugs) || 0
+          this.bugStats.closedBugs = parseInt(stats.closedBugs) || 0
+          this.bugStats.rejectedBugs = parseInt(stats.rejectedBugs) || 0
+          this.bugStats.thisMonthNew = parseInt(stats.thisMonthNew) || 0
+          this.bugStats.thisMonthResolved = parseInt(stats.thisMonthResolved) || 0
+
+          // 计算Bug解决率
+          const total = parseInt(stats.totalBugs) || 0
+          const resolved = parseInt(stats.resolvedBugs) || 0
+          const resolveRate = total > 0 ? Math.round((resolved / total) * 100) : 0
+
+          // 更新Bug统计页面显示
+          this.$nextTick(() => {
+            this.updateBugStatsDisplay(resolveRate)
+          })
+
+          console.log('项目Bug统计:', stats, '解决率:', resolveRate + '%')
+        }
+      } catch (error) {
+        console.error('加载项目Bug统计失败:', error)
+      }
+    },
+
+    // 加载指定项目的Bug月度趋势
+    async loadProjectBugMonthTrend(projectId) {
+      try {
+        const response = await getProjectBugMonthTrend(projectId)
+        if (response.code === 200 && response.data) {
+          const trendData = response.data
+
+          // 生成最近6个月的月份
+          const months = []
+          const bugNew = []
+          const bugResolved = []
+
+          const now = new Date()
+          for (let i = 5; i >= 0; i--) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+            const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+            months.push(monthStr)
+
+            // 查找该月的数据
+            const monthData = trendData.find(d => d.month === monthStr)
+            bugNew.push(monthData ? parseInt(monthData.newCount) : 0)
+            bugResolved.push(monthData ? parseInt(monthData.resolvedCount) : 0)
+          }
+
+          this.bugMonthTrend = { months, bugNew, bugResolved }
+
+          // 重新渲染Bug图表
+          this.$nextTick(() => {
+            if (this.bugChart) {
+              this.bugChart.dispose()
+            }
+            this.initBugTrendChart()
+          })
+
+          console.log('项目Bug月度趋势:', this.bugMonthTrend)
+        }
+      } catch (error) {
+        console.error('加载项目Bug月度趋势失败:', error)
+      }
+    },
+
+    // 更新Bug统计显示
+    updateBugStatsDisplay(resolveRate) {
+      // 查找所有block-statistic-panes元素，找到包含"Bug解决率"文本的那个
+      const allPanes = document.querySelectorAll('.block-statistic-panes')
+      let bugStatSection = null
+
+      for (let pane of allPanes) {
+        if (pane.textContent.includes('Bug解决率')) {
+          bugStatSection = pane
+          break
+        }
+      }
+
+      if (!bugStatSection) return
+
+      // 更新环形图百分比
+      const progressValueEl = bugStatSection.querySelector('.progress-circle-value')
+      if (progressValueEl) {
+        progressValueEl.textContent = resolveRate
+      }
+
+      // 更新SVG圆环的进度
+      const circle = bugStatSection.querySelector('.progress-circle svg circle:nth-child(2)')
+      if (circle) {
+        const circumference = 283.5 // 2 * PI * 45.12
+        const offset = circumference - (circumference * resolveRate / 100)
+        circle.style.strokeDashoffset = offset
+      }
+
+      // 更新统计数据（有效Bug、已解决、未关闭）
+      const statCols = bugStatSection.querySelectorAll('.stat-col-value')
+      if (statCols.length >= 3) {
+        statCols[0].textContent = this.bugStats.totalBugs // 有效Bug
+        statCols[1].textContent = this.bugStats.resolvedBugs // 已解决
+        statCols[2].textContent = this.bugStats.unclosedBugs // 未关闭
+      }
+
+      // 更新本月解决和新增数据
+      const trendInfoSpans = bugStatSection.querySelectorAll('.trend-info span')
+      if (trendInfoSpans.length >= 2) {
+        // 本月解决
+        const resolvedSpan = trendInfoSpans[0].querySelector('.success')
+        if (resolvedSpan) {
+          resolvedSpan.textContent = this.bugStats.thisMonthResolved
+        }
+        // 本月新增
+        const newSpan = trendInfoSpans[2].querySelector('.primary')
+        if (newSpan) {
+          newSpan.textContent = this.bugStats.thisMonthNew
+        }
       }
     },
 
@@ -731,7 +897,7 @@ export default {
           }
         },
         grid: {
-          left: '10px',
+          left: '20px',
           right: '30px',
           top: '30px',
           bottom: '25px',
@@ -804,7 +970,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['新增任务', '完成任务'],
+          data: ['新增Bug', '解决Bug'],
           top: 0,
           right: '30px',
           textStyle: {
@@ -812,7 +978,7 @@ export default {
           }
         },
         grid: {
-          left: '10px',
+          left: '20px',
           right: '30px',
           top: '30px',
           bottom: '25px',
@@ -821,7 +987,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: this.monthTrend.months,
+          data: this.bugMonthTrend.months,
           axisTick: {
             alignWithLabel: true
           },
@@ -848,9 +1014,9 @@ export default {
         },
         series: [
           {
-            name: '新增任务',
+            name: '新增Bug',
             type: 'line',
-            data: this.monthTrend.taskNew,
+            data: this.bugMonthTrend.bugNew,
             smooth: true,
             emphasis: {
               label: {
@@ -859,9 +1025,9 @@ export default {
             }
           },
           {
-            name: '完成任务',
+            name: '解决Bug',
             type: 'line',
-            data: this.monthTrend.taskCompleted,
+            data: this.bugMonthTrend.bugResolved,
             smooth: true,
             emphasis: {
               label: {

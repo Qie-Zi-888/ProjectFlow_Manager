@@ -9,7 +9,7 @@
         <version>3.9.1</version>
     </parent>
 
-    <artifactId>ruoyi-project</artifactId>
+    <artifactId>ruoyi-defects</artifactId>
 
     <properties>
         <maven.compiler.source>19</maven.compiler.source>
@@ -24,13 +24,5 @@
             <artifactId>ruoyi-common</artifactId>
         </dependency>
 
-        <!-- 缺陷管理模块 -->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-defects</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
-
 </project>

@@ -181,9 +181,9 @@
       <el-table-column label="书签标识" align="center" prop="bookmark" />
       <el-table-column label="任务名称" align="center" prop="taskName" />
       <el-table-column label="任务类型" align="center" prop="taskType" />
-      <el-table-column label="优先级" align="center">
+      <el-table-column label="优先级" align="center" prop="priority" width="60">
         <template slot-scope="scope">
-          <span>{{ priorityFormat(scope.row.priority) }}</span>
+          <span :class="'pri-' + scope.row.priority">{{ scope.row.priority }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
@@ -668,3 +668,41 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* 优先级圆形徽章 */
+.pri-1,
+.pri-2,
+.pri-3,
+.pri-4 {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid;
+}
+
+.pri-1 {
+  color: #FF4D4F;
+  border-color: #FF4D4F;
+}
+
+.pri-2 {
+  color: #FFA940;
+  border-color: #FFA940;
+}
+
+.pri-3 {
+  color: #2B80FF;
+  border-color: #2B80FF;
+}
+
+.pri-4 {
+  color: #52c41a;
+  border-color: #52c41a;
+}
+</style>

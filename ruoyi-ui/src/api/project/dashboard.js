@@ -57,3 +57,21 @@ export function getProjectMonthTrend(projectId) {
     params: { projectId }
   })
 }
+
+// 获取指定项目的Bug统计数据
+export function getProjectBugStats(projectId) {
+  return request({
+    url: '/project/dashboard/projectBugStats',
+    method: 'get',
+    params: { projectId }
+  })
+}
+
+// 获取指定项目的Bug月度趋势
+export function getProjectBugMonthTrend(projectId) {
+  return request({
+    url: '/project/dashboard/projectBugMonthTrend',
+    method: 'get',
+    params: { projectId }
+  })
+}

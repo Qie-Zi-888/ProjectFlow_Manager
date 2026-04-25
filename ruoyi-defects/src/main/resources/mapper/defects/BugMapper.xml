@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.defects.mapper.BugMapper">
+    
+    <resultMap type="Bug" id="BugResult">
+        <result property="bugId"    column="bug_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="reqId"    column="req_id"    />
+        <result property="moduleId"    column="module_id"    />
+        <result property="foundVersion"    column="found_version"    />
+        <result property="fixedVersion"    column="fixed_version"    />
+        <result property="bugTitle"    column="bug_title"    />
+        <result property="description"    column="description"    />
+        <result property="severity"    column="severity"    />
+        <result property="priority"    column="priority"    />
+        <result property="status"    column="status"    />
+        <result property="assignTo"    column="assign_to"    />
+        <result property="resolvedBy"    column="resolved_by"    />
+        <result property="resolvedTime"    column="resolved_time"    />
+        <result property="closedBy"    column="closed_by"    />
+        <result property="closedTime"    column="closed_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectBugVo">
+        select bug_id, project_id, req_id, module_id, found_version, fixed_version, bug_title, description, severity, priority, status, assign_to, resolved_by, resolved_time, closed_by, closed_time, create_by, create_time, update_by, update_time, del_flag from bug
+    </sql>
+
+    <select id="selectBugList" parameterType="Bug" resultMap="BugResult">
+        <include refid="selectBugVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="foundVersion != null  and foundVersion != ''"> and found_version = #{foundVersion}</if>
+            <if test="bugTitle != null  and bugTitle != ''"> and bug_title = #{bugTitle}</if>
+            <if test="severity != null  and severity != ''"> and severity = #{severity}</if>
+            <if test="priority != null  and priority != ''"> and priority = #{priority}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="assignTo != null "> and assign_to = #{assignTo}</if>
+        </where>
+    </select>
+    
+    <select id="selectBugByBugId" parameterType="Long" resultMap="BugResult">
+        <include refid="selectBugVo"/>
+        where bug_id = #{bugId}
+    </select>
+
+    <insert id="insertBug" parameterType="Bug" useGeneratedKeys="true" keyProperty="bugId">
+        insert into bug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">project_id,</if>
+            <if test="reqId != null">req_id,</if>
+            <if test="moduleId != null">module_id,</if>
+            <if test="foundVersion != null">found_version,</if>
+            <if test="fixedVersion != null">fixed_version,</if>
+            <if test="bugTitle != null and bugTitle != ''">bug_title,</if>
+            <if test="description != null">description,</if>
+            <if test="severity != null">severity,</if>
+            <if test="priority != null">priority,</if>
+            <if test="status != null">status,</if>
+            <if test="assignTo != null">assign_to,</if>
+            <if test="resolvedBy != null">resolved_by,</if>
+            <if test="resolvedTime != null">resolved_time,</if>
+            <if test="closedBy != null">closed_by,</if>
+            <if test="closedTime != null">closed_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="reqId != null">#{reqId},</if>
+            <if test="moduleId != null">#{moduleId},</if>
+            <if test="foundVersion != null">#{foundVersion},</if>
+            <if test="fixedVersion != null">#{fixedVersion},</if>
+            <if test="bugTitle != null and bugTitle != ''">#{bugTitle},</if>
+            <if test="description != null">#{description},</if>
+            <if test="severity != null">#{severity},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="status != null">#{status},</if>
+            <if test="assignTo != null">#{assignTo},</if>
+            <if test="resolvedBy != null">#{resolvedBy},</if>
+            <if test="resolvedTime != null">#{resolvedTime},</if>
+            <if test="closedBy != null">#{closedBy},</if>
+            <if test="closedTime != null">#{closedTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBug" parameterType="Bug">
+        update bug
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="reqId != null">req_id = #{reqId},</if>
+            <if test="moduleId != null">module_id = #{moduleId},</if>
+            <if test="foundVersion != null">found_version = #{foundVersion},</if>
+            <if test="fixedVersion != null">fixed_version = #{fixedVersion},</if>
+            <if test="bugTitle != null and bugTitle != ''">bug_title = #{bugTitle},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="severity != null">severity = #{severity},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="assignTo != null">assign_to = #{assignTo},</if>
+            <if test="resolvedBy != null">resolved_by = #{resolvedBy},</if>
+            <if test="resolvedTime != null">resolved_time = #{resolvedTime},</if>
+            <if test="closedBy != null">closed_by = #{closedBy},</if>
+            <if test="closedTime != null">closed_time = #{closedTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where bug_id = #{bugId}
+    </update>
+
+    <delete id="deleteBugByBugId" parameterType="Long">
+        delete from bug where bug_id = #{bugId}
+    </delete>
+
+    <delete id="deleteBugByBugIds" parameterType="String">
+        delete from bug where bug_id in 
+        <foreach item="bugId" collection="array" open="(" separator="," close=")">
+            #{bugId}
+        </foreach>
+    </delete>
+
+    <!-- 查询指定项目的Bug统计数据 -->
+    <select id="selectProjectBugStats" parameterType="Long" resultType="java.util.HashMap">
+        SELECT
+            COUNT(*) as totalBugs,
+            SUM(CASE WHEN status IN (0, 1, 2) THEN 1 ELSE 0 END) as unclosedBugs,
+            SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as resolvedBugs,
+            SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END) as closedBugs,
+            SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END) as rejectedBugs,
+            SUM(CASE WHEN MONTH(create_time) = MONTH(CURDATE()) AND YEAR(create_time) = YEAR(CURDATE()) THEN 1 ELSE 0 END) as thisMonthNew,
+            SUM(CASE WHEN status = 3 AND MONTH(resolved_time) = MONTH(CURDATE()) AND YEAR(resolved_time) = YEAR(CURDATE()) THEN 1 ELSE 0 END) as thisMonthResolved
+        FROM bug
+        WHERE project_id = #{projectId}
+          AND del_flag = 0
+    </select>
+
+    <!-- 查询指定项目的Bug月度趋势 -->
+    <select id="selectProjectBugMonthTrend" parameterType="Long" resultType="java.util.HashMap">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m') as month,
+            COUNT(*) as newCount,
+            SUM(CASE WHEN status = 3 AND resolved_time IS NOT NULL THEN 1 ELSE 0 END) as resolvedCount
+        FROM bug
+        WHERE project_id = #{projectId}
+          AND del_flag = 0
+          AND create_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m')
+        ORDER BY month ASC
+    </select>
+</mapper>
