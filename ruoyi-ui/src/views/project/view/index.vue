@@ -64,6 +64,7 @@
 
 <script>
 import { getProject, listProject } from "@/api/project/project"
+import { getSprint, listSprint } from "@/api/project/sprint"
 import * as echarts from 'echarts'
 
 export default {
@@ -262,7 +263,67 @@ export default {
 
       this.burndownChart = echarts.init(this.$refs.burndownChart)
 
-      // TODO: 这里需要根据实际数据构建燃尽图数据
+      // 获取当前项目的迭代数据来构建燃尽图
+      this.loadBurndownData()
+    },
+    /** 加载燃尽图数据 */
+    loadBurndownData() {
+      // 这里假设我们获取第一个迭代的数据作为示例
+      // 在实际应用中，可能需要根据具体需求选择合适的迭代
+      const params = {
+        projectId: this.projectId,
+        pageNum: 1,
+        pageSize: 1
+      }
+      
+      listSprint(params).then(response => {
+        const sprints = response.rows || []
+        if (sprints.length > 0) {
+          const sprintId = sprints[0].sprintId
+          getSprint(sprintId).then(sprintResponse => {
+            const sprint = sprintResponse.data
+            this.renderBurndownChart(sprint)
+          })
+        } else {
+          // 如果没有迭代数据，使用默认数据
+          this.renderDefaultBurndownChart()
+        }
+      }).catch(() => {
+        // 出错时使用默认数据
+        this.renderDefaultBurndownChart()
+      })
+    },
+    /** 渲染燃尽图 */
+    renderBurndownChart(sprint) {
+      const burndownList = sprint.sprintBurndownList || []
+      
+      if (burndownList.length === 0) {
+        this.renderDefaultBurndownChart()
+        return
+      }
+
+      // 按日期排序
+      burndownList.sort((a, b) => new Date(a.statDate) - new Date(b.statDate))
+      
+      // 提取日期和剩余工时数据，每隔7天取一个数据点，保持显示10个点
+      const dates = []
+      const idealHours = []
+      const actualHours = []
+      
+      // 保持显示10个数据点，但每个点间隔7天
+      const displayPoints = 10
+      const step = 7 // 每7天一个间隔
+      
+      for (let i = 0; i < burndownList.length && dates.length < displayPoints; i += step) {
+        const item = burndownList[i]
+        const date = new Date(item.statDate)
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        dates.push(`${month}月${day}日`)
+        idealHours.push(item.idealRemainingHours || 0)
+        actualHours.push(item.remainingHours || 0)
+      }
+
       const option = {
         title: {
           text: '项目燃尽图',
@@ -284,7 +345,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['第1天', '第2天', '第3天', '第4天', '第5天', '第6天', '第7天', '第8天', '第9天', '第10天']
+          data: dates
         },
         yAxis: {
           type: 'value',
@@ -294,7 +355,7 @@ export default {
           {
             name: '理想剩余工时',
             type: 'line',
-            data: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
+            data: idealHours,
             lineStyle: {
               type: 'dashed'
             },
@@ -305,7 +366,69 @@ export default {
           {
             name: '实际剩余工时',
             type: 'line',
-            data: [100, 92, 85, 78, 65, 55, 48, 35, 25, 12],
+            data: actualHours,
+            smooth: true,
+            itemStyle: {
+              color: '#5470c6'
+            },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(84, 112, 198, 0.3)' },
+                { offset: 1, color: 'rgba(84, 112, 198, 0.05)' }
+              ])
+            }
+          }
+        ]
+      }
+
+      this.burndownChart.setOption(option)
+    },
+    /** 渲染默认燃尽图 */
+    renderDefaultBurndownChart() {
+      const option = {
+        title: {
+          text: '项目燃尽图',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['理想剩余工时', '实际剩余工时'],
+          top: 30
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['03月01日', '03月08日', '03月15日', '03月22日', '03月29日', '04月05日', '04月12日', '04月19日', '04月26日', '05月03日']
+        },
+        yAxis: {
+          type: 'value',
+          name: '剩余工时(h)',
+          max: 500
+        },
+        series: [
+          {
+            name: '理想剩余工时',
+            type: 'line',
+            data: [500, 450, 400, 350, 300, 250, 200, 150, 100, 50],
+            lineStyle: {
+              type: 'dashed'
+            },
+            itemStyle: {
+              color: '#91cc75'
+            }
+          },
+          {
+            name: '实际剩余工时',
+            type: 'line',
+            data: [500, 460, 390, 335, 310, 275, 240, 175, 125, 60],
             smooth: true,
             itemStyle: {
               color: '#5470c6'
