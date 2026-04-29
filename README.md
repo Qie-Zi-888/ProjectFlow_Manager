@@ -51,6 +51,7 @@ ProjectFlow Manager 是一个基于 Spring Boot + Vue 前后端分离的软件�
 ### 界面展示
 <img width="1815" height="1353" alt="首页" src="https://github.com/user-attachments/assets/f9e5f896-e14f-4187-9320-56cac51f8e1b" />
 <img width="1808" height="1472" alt="项目管理仪表盘" src="https://github.com/user-attachments/assets/652c5b5a-e0f8-4d28-8e81-faf3eaeb0f10" />
+<img width="1455" height="855" alt="项目新增测试" src="https://github.com/user-attachments/assets/9dcb0c8b-aeeb-4879-b076-0b6d0a6e0f00" />
 
 
 
