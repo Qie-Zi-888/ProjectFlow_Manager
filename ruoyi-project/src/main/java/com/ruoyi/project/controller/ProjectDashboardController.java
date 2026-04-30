@@ -111,7 +111,7 @@ public class ProjectDashboardController extends BaseController
     }
 
     /**
-     * 获取年度发布榜（按项目完成需求数排名）
+     * 获取年度发布榜（按项目的完成需求数排名）
      */
     @GetMapping("/annualRanking")
     public AjaxResult getAnnualRanking()
