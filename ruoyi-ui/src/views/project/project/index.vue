@@ -542,8 +542,21 @@ export default {
     },
     /** 团队按钮操作 */
     handleTeam(row) {
-      // TODO: 跳转到团队管理页面或打开团队对话框
-      this.$modal.msgInfo("团队功能开发中...")
+      console.log('点击团队按钮，项目数据:', row)
+      console.log('teamId:', row.teamId)
+      // 跳转到团队管理页面，并传递团队ID作为搜索条件
+      if (row.teamId) {
+        console.log('准备跳转到 /projects/member, teamId:', row.teamId)
+        this.$router.push({
+          path: '/projects/member',
+          query: {
+            teamId: row.teamId
+          }
+        })
+      } else {
+        console.log('该项目未设置负责团队')
+        this.$modal.msgWarning("该项目未设置负责团队")
+      }
     },
     /** 视图按钮操作 */
     handleView(row) {
