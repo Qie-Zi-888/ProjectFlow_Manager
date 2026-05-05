@@ -113,7 +113,11 @@
         </template>
       </el-table-column>
       <el-table-column label="已用工时" align="center" prop="investment" />
-      <el-table-column label="创建者" align="center" prop="createBy" />
+      <el-table-column label="受限用户" align="center" width="100">
+        <template slot-scope="scope">
+          <span>否</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
@@ -238,7 +242,44 @@ export default {
     }
   },
   created() {
-    this.getList()
+    console.log('团队管理页面加载')
+    console.log('路由参数:', this.$route.query)
+    // 从路由参数中获取 teamId
+    if (this.$route.query.teamId) {
+      console.log('接收到 teamId:', this.$route.query.teamId)
+      // 使用 $set 确保响应式更新
+      this.$set(this.queryParams, 'teamId', this.$route.query.teamId)
+      console.log('queryParams.teamId 已设置为:', this.queryParams.teamId)
+      // 自动执行搜索
+      this.$nextTick(() => {
+        console.log('开始执行搜索...')
+        this.handleQuery()
+      })
+    } else {
+      console.log('没有接收到 teamId 参数')
+      this.getList()
+    }
+  },
+  watch: {
+    // 监听路由变化，当路由参数改变时重新加载数据
+    '$route.query': {
+      handler(newQuery) {
+        console.log('路由参数变化:', newQuery)
+        if (newQuery.teamId) {
+          // 有新的 teamId，更新搜索条件并查询
+          this.$set(this.queryParams, 'teamId', newQuery.teamId)
+          console.log('更新 teamId 为:', newQuery.teamId)
+          this.handleQuery()
+        } else {
+          // 没有 teamId，清空搜索条件
+          this.$set(this.queryParams, 'teamId', null)
+          console.log('清空 teamId')
+          this.resetQuery()
+        }
+      },
+      deep: true,
+      immediate: false
+    }
   },
   methods: {
     /** 查询项目成员列表 */

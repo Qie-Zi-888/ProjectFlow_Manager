@@ -31,6 +31,10 @@ public class Task extends BaseEntity
     /** 所属模块 */
     private Long moduleId;
 
+    /** 书签标识 */
+    @Excel(name = "书签标识")
+    private String bookmark;
+
     /** 任务名称 */
     @Excel(name = "任务名称")
     private String taskName;
@@ -119,6 +123,16 @@ public class Task extends BaseEntity
     public Long getModuleId() 
     {
         return moduleId;
+    }
+
+    public void setBookmark(String bookmark) 
+    {
+        this.bookmark = bookmark;
+    }
+
+    public String getBookmark() 
+    {
+        return bookmark;
     }
 
     public void setTaskName(String taskName) 
@@ -268,6 +282,7 @@ public class Task extends BaseEntity
             .append("projectId", getProjectId())
             .append("reqId", getReqId())
             .append("moduleId", getModuleId())
+            .append("bookmark", getBookmark())
             .append("taskName", getTaskName())
             .append("description", getDescription())
             .append("taskType", getTaskType())

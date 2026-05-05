@@ -177,10 +177,10 @@
 
     <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务ID" align="center" prop="taskId" />
-      <el-table-column label="书签标识" align="center" prop="bookmark" />
+      <el-table-column label="任务ID" align="center" prop="taskId" width="70" />
+      <el-table-column label="书签标识" align="center" prop="bookmark" width="150" />
       <el-table-column label="任务名称" align="center" prop="taskName" />
-      <el-table-column label="任务类型" align="center" prop="taskType" />
+      <el-table-column label="任务类型" align="center" prop="taskType" width="120" />
       <el-table-column label="优先级" align="center" prop="priority" width="60">
         <template slot-scope="scope">
           <span :class="'pri-' + scope.row.priority">{{ scope.row.priority }}</span>
@@ -192,8 +192,8 @@
         </template>
       </el-table-column>
       <el-table-column label="指派给" align="center" prop="assignToName" />
-      <el-table-column label="预估工时" align="center" prop="estimateTime" />
-      <el-table-column label="已消耗工时" align="center" prop="consumedTime" />
+      <el-table-column label="预估工时" align="center" prop="estimateTime" width="100" />
+      <el-table-column label="已消耗工时" align="center" prop="consumedTime" width="100" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

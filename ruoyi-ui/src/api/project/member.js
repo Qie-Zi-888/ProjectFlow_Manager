@@ -42,3 +42,12 @@ export function delMember(id) {
     method: 'delete'
   })
 }
+
+// 获取所有团队列表（用于下拉框）
+export function listTeam(query) {
+  return request({
+    url: '/project/member/list',
+    method: 'get',
+    params: query
+  })
+}

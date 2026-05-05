@@ -186,6 +186,12 @@
         </template>
       </el-table-column>
       <el-table-column label="项目负责人姓名" align="center" prop="ownerName" />
+      <el-table-column label="负责团队" align="center" prop="teamName" width="120">
+        <template slot-scope="scope">
+          <span v-if="scope.row.teamName">{{ scope.row.teamName }}</span>
+          <span v-else style="color: #909399;">未设置</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建者" align="center" prop="createBy" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">
@@ -311,6 +317,16 @@
         <el-form-item label="项目负责人姓名" prop="ownerName">
           <el-input v-model="form.ownerName" placeholder="请输入项目负责人姓名" />
         </el-form-item>
+        <el-form-item label="负责团队" prop="teamId">
+          <el-select v-model="form.teamId" placeholder="请选择负责团队" clearable style="width: 100%" @change="handleTeamChange">
+            <el-option
+              v-for="team in teamList"
+              :key="team.teamId"
+              :label="team.teamName"
+              :value="team.teamId"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="看板样式" prop="boardStyle">
           <el-input v-model="form.boardStyle" placeholder="请输入看板样式" />
         </el-form-item>
@@ -375,6 +391,7 @@
 
 <script>
 import { listProject, getProject, delProject, addProject, updateProject } from "@/api/project/project"
+import { listMember } from "@/api/project/member"
 
 export default {
   name: "Project",
@@ -398,6 +415,8 @@ export default {
       projectList: [],
       // 项目模块表格数据
       projectModuleList: [],
+      // 团队列表
+      teamList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -494,6 +513,8 @@ export default {
         progress: null,
         ownerId: null,
         ownerName: null,
+        teamId: null,
+        teamName: null,
         boardStyle: null,
         colWidth: null,
         displayCards: null,
@@ -526,12 +547,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
+      this.getTeamList()
       this.open = true
       this.title = "添加项目"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
+      this.getTeamList()
       const projectId = row.projectId || this.ids
       getProject(projectId).then(response => {
         this.form = response.data
@@ -539,6 +562,34 @@ export default {
         this.open = true
         this.title = "修改项目"
       })
+    },
+    /** 获取团队列表 */
+    getTeamList() {
+      // 从 project 表中获取所有不重复的团队
+      listProject({ pageNum: 1, pageSize: 1000 }).then(response => {
+        const teams = []
+        const teamMap = new Map()
+        response.rows.forEach(item => {
+          if (item.teamId && !teamMap.has(item.teamId)) {
+            teamMap.set(item.teamId, true)
+            teams.push({
+              teamId: item.teamId,
+              teamName: item.teamName || item.teamId
+            })
+          }
+        })
+        this.teamList = teams
+        console.log('获取到的团队列表:', this.teamList)
+      })
+    },
+    /** 团队选择变化 */
+    handleTeamChange(teamId) {
+      const team = this.teamList.find(t => t.teamId === teamId)
+      if (team) {
+        this.form.teamName = team.teamName
+      } else {
+        this.form.teamName = null
+      }
     },
     /** 团队按钮操作 */
     handleTeam(row) {

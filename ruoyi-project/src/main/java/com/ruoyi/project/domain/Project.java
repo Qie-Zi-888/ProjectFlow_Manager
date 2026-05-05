@@ -85,6 +85,10 @@ public class Project extends BaseEntity
     @Excel(name = "团队 ID")
     private Long teamId;
 
+    /** 团队名称 */
+    @Excel(name = "团队名称")
+    private String teamName;
+
     /** 看板样式（1 标准看板 2 敏捷看板 3 自定义） */
     private Long boardStyle;
 
@@ -273,6 +277,16 @@ public class Project extends BaseEntity
         return teamId;
     }
 
+    public void setTeamName(String teamName) 
+    {
+        this.teamName = teamName;
+    }
+
+    public String getTeamName() 
+    {
+        return teamName;
+    }
+
     public void setBoardStyle(Long boardStyle) 
     {
         this.boardStyle = boardStyle;
@@ -353,6 +367,7 @@ public class Project extends BaseEntity
             .append("ownerId", getOwnerId())
             .append("ownerName", getOwnerName())
             .append("teamId", getTeamId())
+            .append("teamName", getTeamName())
             .append("boardStyle", getBoardStyle())
             .append("colWidth", getColWidth())
             .append("displayCards", getDisplayCards())
